@@ -2,8 +2,7 @@
 include_once 'nav.php';
 include_once 'connect-db.php';
 $connect = db_connect();
-$get_main_categories_result = mysqli_query($connect, "select * from categories where category_id is null");
-
+$get_main_categories_result = $connect->query("select * from categories where category_id is null");
 
 ?>
 <!DOCTYPE html>
@@ -24,17 +23,17 @@ $get_main_categories_result = mysqli_query($connect, "select * from categories w
 
       <form class="row g-3" action="category.php" method="post">
         <?php if (!empty($_GET['status']) && $_GET['status'] == 'empty') { ?>
-          <div class="alert alert-danger" role="alert">
+          <div id="alertDiv" class="alert alert-danger" role="alert">
             <strong>complete requires</strong>
           </div>
         <?php } ?>
         <?php if (!empty($_GET['status']) && $_GET['status'] == 'addsubcat') { ?>
-          <div class="alert alert-success" role="alert">
+          <div id="alertDiv" class="alert alert-success" role="alert">
             <strong>add sub-category</strong>
           </div>
         <?php } ?>
         <?php if (!empty($_GET['status']) && $_GET['status'] == 'addcat') { ?>
-          <div class="alert alert-success" role="alert">
+          <div id="alertDiv" class="alert alert-success" role="alert">
             <strong>add new category...</strong>
           </div>
         <?php } ?>
@@ -46,7 +45,7 @@ $get_main_categories_result = mysqli_query($connect, "select * from categories w
           <label for="category" class="form-label">category</label>
           <select id="category" class="form-select" name="category_id">
             <option selected value="null">Select one</option>
-            <?php while ($main_category = mysqli_fetch_assoc($get_main_categories_result)) {
+            <?php while ($main_category = $get_main_categories_result->fetch()) {
               $main_category_name = $main_category['name'];
               $main_category_id = $main_category['id'];
               echo "<option value='$main_category_id'>$main_category_name</option>";

@@ -1,24 +1,22 @@
-<?php 
+<?php
 include_once './nav.php';
 include_once 'connect-db.php';
 //delete product
-if (!empty($_GET['del_cat_id'])) {
+if (!empty($_GET['img_id'])) {
     $connect = db_connect();
-    if (mysqli_query($connect, "delete from products where id = " . $_GET['del_cat_id'])) {
+    $img_id = $_GET['img_id'];
+    $sql = "SELECT `product_id` FROM product_images WHERE id = $img_id";
+    $product_id = mysqli_query($connect, $sql)->fetch_object()->product_id; 
+
+    if (
+        mysqli_query($connect, "DELETE FROM `product_images` WHERE id = $img_id") &&
+        mysqli_query($connect, "DELETE FROM `products` WHERE id = $product_id")
+    ) {
         redirect_page('index.php?status=delete');
     } else {
         echo "Error in delete";
     }
     mysqli_close($connect);
-    //update product
-}elseif(!empty($_POST['edit_cat_id'])){
-    $connect = db_connect();
-    if (mysqli_query($connect, " update from products where id = " . $_POST['edit_cat_id'])) {
-        redirect_page('category-ui.php?status=done');
-    } else {
-        redirect_page('login.php');
-
-        echo "Error in update";
-    }
 }
-?>
+
+

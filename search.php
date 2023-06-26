@@ -5,11 +5,9 @@ $search =$_POST["search"];
 
 
 if(!empty($search)){
-    $sql = "select * from products where name like '$search'";
-    $result = mysqli_query($connect, $sql);
+    $sql = $connect->query("select * from products where name like '$search'");
 
-
-    if ($result->num_rows > 0){
+    if ($$sql->rowCount() > 0){
         while($main_category = mysqli_fetch_assoc($result) ){
             echo $row["name"]."  ".$row["email"]." <br>";
         }}
@@ -18,4 +16,3 @@ if(!empty($search)){
 }else {
     redirect_page("index.php?status=empty");
 }
-?>

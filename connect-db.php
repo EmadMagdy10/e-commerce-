@@ -4,10 +4,25 @@ const DB_USERNAME = 'root';
 const DB_PASSWORD = '';
 const DB_NAME = 'store';
 
+$servername = "localhost";
+$username = "username";
+$password = "password";
+
+
+
+
+
 function db_connect()
 {
-    return mysqli_connect(HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_NAME);
-}
+    try {
+        $conn = new PDO("mysql:host=localhost;dbname=store", 'root','');
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return  new PDO("mysql:host=localhost;dbname=store", 'root','');
+      } catch(PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+      }
+    }
 function redirect_page($url)
 {
     header('location:' . $url);
@@ -19,10 +34,9 @@ function user_found()
     $connect = db_connect();
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $sql = "SELECT `name`,`email`,`role` FROM users WHERE email = '$email' and password = md5('$password')";
-    $result = mysqli_query($connect, $sql);
+    $sql = $connect->query("SELECT `name`,`email`,`role` FROM users WHERE email = '$email' and password = md5('$password')");
+     if ($user = $sql->fetch()) {
 
-    if ($user = mysqli_fetch_assoc($result)) {
         if ($user['role'] == 'admin') {
             if (!empty($_POST['remember_me'])) {
                 setcookie('name', $user['name'], time() + 60 * 60 + 24 * 30);
@@ -31,7 +45,7 @@ function user_found()
             }
             session_start();
             $_SESSION['user'] = $user;
-            redirect_page('products-ui.php');
+            redirect_page('index.php');
         } else {
             redirect_page('login-ui.php?status=notadmin');
         }
@@ -39,3 +53,4 @@ function user_found()
         redirect_page('login-ui.php?status=notfound');
     }
 }
+

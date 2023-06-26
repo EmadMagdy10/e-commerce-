@@ -1,31 +1,46 @@
 <?php
-include_once'connect-db.php';
-if(!empty($_POST['name'])&&!empty($_POST['price'])&&!empty($_POST['unit'])&&!empty($_POST['category'])&&!empty($_POST['description'])){
-    $connect=db_connect();
-    $productName=$_POST['name'];
-    $productPrice=$_POST['price'];
-    $productUnit=$_POST['unit'];
-    $productDescription=$_POST['description'];
-    $cate_id=$_POST['category'];
-    // $img=$_FILES['image'];
+include_once 'connect-db.php';
+$connect = db_connect();
+if (!empty($_POST['name']) && !empty($_POST['price']) && !empty($_POST['unit']) && !empty($_POST['category']) && !empty($_POST['description'])) {
+  $productName = $_POST['name'];
+  $productPrice = $_POST['price'];
+  $productUnit = $_POST['unit'];
+  $productDescription = $_POST['description'];
+  $cate_id = $_POST['category'];
 
+  $query_insert = $connect->prepare("INSERT INTO products (name, price, unit_price, comment, category_id) VALUES (:name, :price, :unit_price, :comment, :category_id)");
+  $query_insert->execute(array(
+    'name' => $productName,
+    'price' => $productPrice,
+    'unit_price' => $productUnit,
+    'comment' => $productDescription,
+    'category_id' => $cate_id
+  ));
 
-    $query_insert = "insert into products (name , price , unit_price , comment ,category_id)
-    VALUES ('$productName', '$productPrice', '$productUnit', '$productDescription' ,'$cate_id')";
-    $result = mysqli_query($connect, $query_insert);
-    
-    // $product_id = mysqli_insert_id($connect);
-    // if (!empty($_FILES['images'])) {
-    //     $i = 1;
-    //     foreach ($_FILES['images']['name'] as $key => $name) {
-    //         $file_name = "assets/" . date('Ymdhis') . '_' . $i++ . "_" . $name;
-    //         move_uploaded_file($_FILES['images']['tmp_name'][$key], $file_name);
-    //         $product_image_qry = "insert into product_images(product_id, url) VALUES ('$product_id','$file_name')";
-    //         $product_image_qry_result = mysqli_query($connect, $product_image_qry);
-    //     }
-    // }
-    redirect_page('products-ui.php?status=done');
+  $sql = "SELECT id FROM products WHERE name = :name AND category_id = :category_id";
+  $result = $connect->prepare($sql);
+  $result->execute(array('name' => $productName, 'category_id' => $cate_id));
+  $product = $result->fetch(PDO::FETCH_ASSOC);
 
-}else{
-    redirect_page('products-ui.php?status=empty');
+  if ($product) {
+    $product_id = $product['id'];
+    if (isset($_FILES["images"]["name"][0])) {
+      $insert_img = $connect->prepare("INSERT INTO product_images (url, product_id) VALUES (:url, :product_id)");
+      for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
+        $fileName = uniqid() . "_" . $_FILES["images"]["name"][$i];
+        $fileTmp = $_FILES["images"]["tmp_name"][$i];
+        $destination = "uploades/" . $fileName;
+        move_uploaded_file($fileTmp, $destination);
+          // Modify the SQL query to insert the image URL and product ID
+          $insert_img->execute(array(
+            'url' => $destination,
+            'product_id' => $product_id
+          ));
+        }
+      redirect_page('products-ui.php?status=done');
+    }else{
+      redirect_page('products-ui.php?status=error');
+
+    }
+  }
 }
