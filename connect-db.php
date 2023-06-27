@@ -4,21 +4,13 @@ const DB_USERNAME = 'root';
 const DB_PASSWORD = '';
 const DB_NAME = 'store';
 
-$servername = "localhost";
-$username = "username";
-$password = "password";
-
-
-
-
-
 function db_connect()
 {
     try {
         $conn = new PDO("mysql:host=localhost;dbname=store", 'root','');
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return  new PDO("mysql:host=localhost;dbname=store", 'root','');
+        return  $conn;
       } catch(PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
       }
@@ -45,6 +37,7 @@ function user_found()
             }
             session_start();
             $_SESSION['user'] = $user;
+            $connect = null;
             redirect_page('index.php');
         } else {
             redirect_page('login-ui.php?status=notadmin');

@@ -22,4 +22,3 @@ if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password
 }
 
 
-$connect->close();

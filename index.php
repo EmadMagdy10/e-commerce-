@@ -2,7 +2,13 @@
 include_once './nav.php';
 include_once 'connect-db.php';
 $connect = db_connect();
-$name = $connect->query("SELECT * FROM products");
+if (!empty($_GET['select_category'])) {
+    $selected = $_GET['select_category'];
+    $name =  $connect->query("SELECT * FROM products WHERE category_id= $selected");
+} else {
+    $name = $connect->query("SELECT * FROM products");
+}
+
 
 
 ?>
@@ -35,8 +41,8 @@ $name = $connect->query("SELECT * FROM products");
 </form>
 <style>
     .img {
-        height: 400px;
-        width: 80%;
+        height: 320px;
+        width: 100%;
     }
 </style>
 <div class="container">
@@ -44,29 +50,36 @@ $name = $connect->query("SELECT * FROM products");
         <?php while ($products = $name->fetch()) {
             $product_id = $products['id'];
             $img_select = $connect->query("SELECT * FROM `product_images` WHERE product_id= $product_id");
-            $img = $img_select->fetch(PDO::FETCH_ASSOC);
-
-
+            $img = $img_select->fetch();
         ?>
             <div class="col-md-4 mb-4 justify-content-center">
-                <div class="arrow arrow-left"></div>
-                <a href="img-change.php?product_id=<?= $products['id'] ?>">
-                    <i class="fa fa-arrow-left fs-3 me-2"></i></a>
-                <img class="card-img img" src="<?= $img['url'] ?>" alt="image-product">
-                <a href="img-change.php"> <i class="fa fa-arrow-right fs-3 me-2"></i></a>
-                <h3 class="card-title text-primary "><?= $products['name'] ?></h3>
-                <h5 class="card-title text-primary">price: <?= $products['price'] ?></h5>
-                <h6 class="card-title "><?= $products['comment'] ?></h6>
-                <div class="d-flex justify-content-center align-items-center">
-                    <a href="products-ui.php?edit=<?= $products['id'] ?>">
-                        <i class="fa fa-plus fs-3 me-2" style="color: #a81a1a;font-size: 18px;"></i>
-                    </a>
-                    <a href="delete.php?img_id=<?= $img['id'] ?>">
+                <div class="card">
+                    <img class="card-img img" src="<?= $img['url'] ?>" alt="image-product">
+                    <div class="card-body d-flex flex-row justify-content-md-between  align-items-center">
+                        
+                        <a href="img-change.php?product_id=<?= $products['id'] ?>">
+                            <i class="fa fa-arrow-left fs-3 me-2"></i></a>
+                        <div class="d-flex flex-column justify-content-center align-items-center">
 
-                        <i class="fa fa-trash fs-3 fa-shake me-3" style="color:  #a81a1a;font-size: 18px"></i>
-                    </a>
+
+                            <h3 class="card-title text-primary "><?= $products['name'] ?></h3>
+                            <h5 class="card-title text-primary">price: <?= $products['price'] ?></h5>
+                            <h6 class="card-title "><?= $products['comment'] ?></h6>
+                        </div>
+                        <a href="img-change.php"> <i class="fa fa-arrow-right fs-3 me-2"></i></a>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="products-ui.php?edit=<?= $products['id'] ?>">
+                            <i class="fa fa-plus fs-3 me-2" style="color: #a81a1a;font-size: 18px;"></i>
+                        </a>
+                        <a href="delete.php?img_id=<?= $img['id'] ?>">
+
+                            <i class="fa fa-trash fs-3 fa-shake me-3" style="color:  #a81a1a;font-size: 18px"></i>
+                        </a>
+                    </div>
+                    <a href="cart.php" class="btn btn-primary">buy</a>
                 </div>
-                <a href="cart.php" class="btn btn-primary">buy</a>
+
             </div>
         <?php } ?>
     </div>

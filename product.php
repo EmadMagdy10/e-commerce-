@@ -31,16 +31,16 @@ if (!empty($_POST['name']) && !empty($_POST['price']) && !empty($_POST['unit']) 
         $fileTmp = $_FILES["images"]["tmp_name"][$i];
         $destination = "uploades/" . $fileName;
         move_uploaded_file($fileTmp, $destination);
-          // Modify the SQL query to insert the image URL and product ID
-          $insert_img->execute(array(
-            'url' => $destination,
-            'product_id' => $product_id
-          ));
-        }
+        // Modify the SQL query to insert the image URL and product ID
+        $insert_img->execute(array(
+          'url' => $destination,
+          'product_id' => $product_id
+        ));
+      }
       redirect_page('products-ui.php?status=done');
-    }else{
+    } else {
       redirect_page('products-ui.php?status=error');
-
     }
   }
+  $connect = null;
 }

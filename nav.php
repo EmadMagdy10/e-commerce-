@@ -17,8 +17,7 @@ if (!empty($_COOKIE['lang']) && $_COOKIE['lang'] == 'ar') {
   require_once 'lag-eg.php';
 }
 $connect = db_connect();
-$select_category =$connect->query("select * from categories where category_id is null");
-
+$select_category = $connect->query("SELECT * from categories where category_id is null");
 
 
 ?>
@@ -68,7 +67,7 @@ $select_category =$connect->query("select * from categories where category_id is
               <?php
               while ($result = $select_category->fetch()) {
               ?>
-                <li><a class="dropdown-item" href="#"><?= $result['name'] ?></a></li>
+                <li><a class="dropdown-item" href="index.php?select_category=<?=$result['id']?>"><?= $result['name'] ?></a></li>
               <?php } ?>
             </ul>
           </li>
@@ -84,7 +83,6 @@ $select_category =$connect->query("select * from categories where category_id is
           <li class="nav-item bg-secondary">
             <a href="change-lag.php?lang=<?= $lang['lang_change_key'] ?>" class="btn  fw-bold"><?= $lang['lang_btn'] ?></a>
           </li>
-
         </ul>
       </div>
     </div>

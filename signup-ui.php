@@ -16,11 +16,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 </head>
-<body>
-<div class="container py-5 h-100">
-  <div class="row d-flex justify-content-center align-items-center h-100">
+<style>
+  .img{
+    background-image: url(./assets/bk2.jpg);
+  }
+  .background{
+    background-color: aliceblue;
+    opacity: .9;
+  }
+</style>
+<body class="container img ">
+
+  <div class="row d-flex justify-content-center align-items-center vh-100">
     <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-      <div class="card shadow-2-strong" style="border-radius: 1rem;">
+      <div class="card shadow-2-strong background my-card" style="border-radius: 1rem;">
 
         <form name="form" action="signup.php" method="post">
 
@@ -87,6 +96,6 @@
       </div>
     </div>
   </div>
-</div>
+
 </body>
 </html>

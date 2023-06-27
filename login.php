@@ -5,6 +5,3 @@ include_once 'connect-db.php';
     } else {
         redirect_page('login-ui.php?status=empty');
     }
-
-
-$conect = db_connect();
