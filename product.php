@@ -43,4 +43,7 @@ if (!empty($_POST['name']) && !empty($_POST['price']) && !empty($_POST['unit']) 
     }
   }
   $connect = null;
-}
+}  else{
+  redirect_page('products-ui.php?status=empty');
+}    
+

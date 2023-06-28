@@ -19,7 +19,8 @@ if (!empty($_COOKIE['lang']) && $_COOKIE['lang'] == 'ar') {
 $connect = db_connect();
 $select_category = $connect->query("SELECT * from categories where category_id is null");
 
-
+$select_user = $connect->query("SELECT role FROM 	users");
+$user_type = $select_user->fetch()
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang['lang'] ?>" dir="<?= $lang['dir'] ?>" class="h-100">
@@ -42,6 +43,11 @@ $select_category = $connect->query("SELECT * from categories where category_id i
   <script src="./javascript/javascript.js"></script>
 
 </head>
+<style>
+  .bk {
+    background-color: #94cbf7;
+  }
+</style>
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -50,8 +56,9 @@ $select_category = $connect->query("SELECT * from categories where category_id i
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse d-flex justify-content-md-between" id="navbarNav">
         <ul class="navbar-nav">
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="./index.php"><?= $lang['Home'] ?></a>
           </li>
@@ -60,20 +67,27 @@ $select_category = $connect->query("SELECT * from categories where category_id i
               <?= $lang['Products'] ?>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="products-ui.php">Add product</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
+              <?php
+              if ($user_type['role'] == 'admin') { ?>
+                <li><a class="dropdown-item" href="products-ui.php">Add product</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+              <?php } ?>
+
               <?php
               while ($result = $select_category->fetch()) {
               ?>
-                <li><a class="dropdown-item" href="index.php?select_category=<?=$result['id']?>"><?= $result['name'] ?></a></li>
+                <li><a class="dropdown-item" href="index.php?select_category=<?= $result['id'] ?>"><?= $result['name'] ?></a></li>
               <?php } ?>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="category-ui.php"><?= $lang['Categories'] ?></a>
-          </li>
+          <?php
+          if ($user_type['role'] == 'admin') { ?>
+            <li class="nav-item">
+              <a class="nav-link" href="category-ui.php"><?= $lang['Categories'] ?></a>
+            </li>
+          <?php } ?>
           <li class="nav-item">
             <a class="nav-link" href="cart.php"><?= $lang['Cart'] ?></a>
           </li>
@@ -83,6 +97,14 @@ $select_category = $connect->query("SELECT * from categories where category_id i
           <li class="nav-item bg-secondary">
             <a href="change-lag.php?lang=<?= $lang['lang_change_key'] ?>" class="btn  fw-bold"><?= $lang['lang_btn'] ?></a>
           </li>
+          <?php
+          if ($result = $select_user->fetch() == 'user') {
+
+          ?>
+            <li class="nav-item justify-content-end bk ms-2">
+              <a class="nav-link" href="vendor_ui.php">become a vendor</a>
+            </li>
+          <?php } ?>
         </ul>
       </div>
     </div>

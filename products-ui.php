@@ -67,7 +67,7 @@ if (!empty($_GET['edit'])) {
       <div class="col-md-4">
         <label for="unit-price" class="form-label">unit-price</label>
         <select required id="unit-price" class="form-select" name="unit">
-          <option selected>select one</option>
+          <option selected value="">select one</option>
           <option>Kg</option>
           <option>liter</option>
           <option>piece</option>
@@ -75,7 +75,7 @@ if (!empty($_GET['edit'])) {
       </div>
       <div class="col-md-4">
         <label for="category" class="form-label">category</label>
-        <select id="category" class="form-select" name="category">
+        <select required id="category" class="form-select" name="category">
           <option selected>Select one</option>
           <?php while ($main_category = $get_main_categories_result->fetch()) {
             $main_category_name = $main_category['name'];

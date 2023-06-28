@@ -44,7 +44,7 @@ $get_main_categories_result = $connect->query("select * from categories where ca
         <div class="col-md-4">
           <label for="category" class="form-label">category</label>
           <select id="category" class="form-select" name="category_id">
-            <option selected value="null">Select one</option>
+            <option selected value=" ">Select one</option>
             <?php while ($main_category = $get_main_categories_result->fetch()) {
               $main_category_name = $main_category['name'];
               $main_category_id = $main_category['id'];
